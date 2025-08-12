@@ -110,7 +110,7 @@ npx playwright test tests/${testFileName}
 If you need to modify specific attribute then gupdate your json, resave and hit below command:
 
 \`\`\`bash
-npx @alphasense/mcp-playwright-generator@latest --json ./json/${jsonFileName} --api-key "your-key"
+npx mcp-playwright-generator@latest --json ./json/${jsonFileName} --api-key "your-key"
 \`\`\`
 > **Note**: Use your own API key when running this command
 
