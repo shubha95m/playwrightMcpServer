@@ -123,7 +123,7 @@ npx @alphasense/mcp-playwright-generator@latest --json ./json/${jsonFileName} --
 
 ## 📞 Need Help?
 
-For any questions or support, reach out to **Shubham (@shubhams)**
+For any questions or support, reach out to **Shubham**
 
 ---
 
