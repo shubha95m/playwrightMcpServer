@@ -1,12 +1,12 @@
 # MCP Playwright Generator
 
-Generate Playwright test files from JSON specifications or browser recordings using Claude AI.
+Generate Playwright tests from JSON specs or real browser recordings, powered by your choice of LLM (Perplexity, Claude, OpenAI, Gemini, Grok, DeepSeek).
 
 ### 📋 Configure repo
 
 ```bash
 # import repo
-git clone https://<gitUserName>@github.com/claude-mcp-server.git
+git clone https://<gitUserName>@github.com/<repoName>.git
 
 # Install dependencies
 pnpm install
@@ -26,43 +26,43 @@ Use directly with npx (no installation required):
 npx mcp-playwright-generator@latest --json ./your-test.json --api-key "your-key"
 
 # Using environment variable
-export ANTHROPIC_API_KEY="your-key"
-npx mcp-playwright-generator@latest --json ./your-test.json
+export PERPLEXITY_API_KEY="your-key"   # or ANTHROPIC_API_KEY / OPENAI_API_KEY / GEMINI_API_KEY / GROK_API_KEY / DEEPSEEK_API_KEY
+npx mcp-playwright-generator@latest --json ./your-test.json --llm perplexity
 
 # Using .env file
-echo 'ANTHROPIC_API_KEY=your-key' > .env
-npx mcp-playwright-generator@latest --json ./your-test.json
+echo 'PERPLEXITY_API_KEY=your-key' > .env
+npx mcp-playwright-generator@latest --json ./your-test.json --llm perplexity
 ```
 
 ### 🎬 Recording Mode - Record browser interactions
 
 ```bash
 # Record interactions on a website
-npx mcp-playwright-generator@latest --record https://rc.alpha-sense.com --api-key "your-key"
+npx mcp-playwright-generator@latest --record https://google.com --llm perplexity --api-key "$PERPLEXITY_API_KEY"
 
 # With environment variable
-export ANTHROPIC_API_KEY="your-key"
-npx mcp-playwright-generator@latest --record https://rc.alpha-sense.com
+export PERPLEXITY_API_KEY="your-key"
+npx mcp-playwright-generator@latest --record https://google.com --llm perplexity
 ```
 
 ### 🚀 Generate and Run Tests Immediately (Visible Browser)
 
 ```bash
 # JSON mode with immediate test execution
-npx mcp-playwright-generator@latest --json ./test.json --api-key "your-key" --run
+npx mcp-playwright-generator@latest --json ./test.json --llm claude --api-key "$ANTHROPIC_API_KEY" --run
 
 # Recording mode with immediate test execution
-npx mcp-playwright-generator@latest --record https://rc.alpha-sense.com --api-key "your-key" --run
+npx mcp-playwright-generator@latest --record https://google.com --llm perplexity --api-key "$PERPLEXITY_API_KEY" --run
 ```
 
 ### ⚡ Generate and Run Tests (Headless Mode - Faster)
 
 ```bash
 # JSON mode in headless mode
-npx mcp-playwright-generator@latest --json ./test.json --api-key "your-key" --run --headless
+npx mcp-playwright-generator@latest --json ./test.json --llm openai --api-key "$OPENAI_API_KEY" --run --headless
 
 # Recording mode in headless mode  
-npx mcp-playwright-generator@latest --record https://rc.alpha-sense.com --api-key "your-key" --run --headless
+npx mcp-playwright-generator@latest --record https://google.com --llm gemini --api-key "$GEMINI_API_KEY" --run --headless
 ```
 
 ### 🧪 Manual Test Execution (After Generation)
@@ -83,7 +83,7 @@ npx playwright test script/tests/ --project=chromium # Specific browser
 ## 📋 Prerequisites
 
 - Node.js >= 18.0.0
-- Anthropic API key
+- LLM API key (Perplexity/Claude/OpenAI/Gemini/Grok/DeepSeek)
 - Running MCP server (for local development)
 
 ## 🛠️ Installation & Setup
@@ -145,9 +145,9 @@ Your JSON file should contain test specifications with **Playwright selectors**:
 ## 📤 Output
 
 **Generated Files:**
-- `script/pages/` - Page Object Model classes (.ts files)
-- `script/tests/` - Playwright test files (.spec.ts files)
-- `script/json/` - Recorded test specifications (recording mode only)
+- `pages/` - Page Object Model classes (.ts files)
+- `tests/` - Playwright test files (.spec.ts files)
+- `json/` - Recorded or source test specifications
 
 **Features:**
 - **Bulletproof Selectors** - Uses Playwright's codegen for guaranteed-unique selectors
@@ -176,10 +176,18 @@ Sample files included:
 
 ## ⚙️ Configuration
 
-### API Key Priority (highest to lowest):
-1. Command line parameter: `--api-key`
-2. Environment variable: `ANTHROPIC_API_KEY` 
-3. .env file: `ANTHROPIC_API_KEY=value`
+### LLM selection & API keys
+- Choose provider with `--llm <perplexity|claude|openai|gemini|grok|deepseek>` (default: `perplexity`).
+- API keys via `--api-key` or env:
+  - Perplexity: `PERPLEXITY_API_KEY`
+  - Claude: `ANTHROPIC_API_KEY`
+  - OpenAI: `OPENAI_API_KEY`
+  - Gemini: `GEMINI_API_KEY` or `GOOGLE_API_KEY`
+  - Grok: `GROK_API_KEY` or `XAI_API_KEY`
+  - DeepSeek: `DEEPSEEK_API_KEY`
+  
+Optional model envs:
+  - `PERPLEXITY_MODEL`, `OPENAI_MODEL`, `GEMINI_MODEL`, `GROK_MODEL`, `DEEPSEEK_MODEL`
 
 ## 🔍 Troubleshooting
 
@@ -191,7 +199,10 @@ Sample files included:
    3. .env file: ANTHROPIC_API_KEY=your-key
 ```
 
-**Error: Cannot connect to MCP server**
+**Password prompt not showing**
+You likely already passed the password via `--password`, or have `MCP_PASSWORD' set. Unset them to force prompt.
+
+**Cannot connect to MCP server**
 ```bash
 ❌ Cannot connect to MCP server. Is it running on http://localhost:3000?
 💡 Start the server with: npm run dev

@@ -13,7 +13,7 @@ export default defineConfig({
     timeout: 60000,
   },
   use: {
-    baseURL: 'https://rc.alpha-sense.com',
+    baseURL: 'https://google.com',
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
