@@ -2,19 +2,31 @@
 
 Generate Playwright tests from JSON specs or real browser recordings, powered by your choice of LLM (Perplexity, Claude, OpenAI, Gemini, Grok, DeepSeek).
 
-### 📋 Configure repo
+## 🔐 Access Required
+
+> **Note:** This CLI tool requires authentication. After running any command, you'll be prompted for a password.
+> 
+> **To get access and boost your productivity:** Contact the package owner for authentication credentials.
+> 
+> **Owner Contact:** Shubham (shubham.sharma75319@gmail.com, +91 701-474-0879)
+
+---
+
+## 🚀 Why you'll love this package
+- **Save 70–90% effort**: Turn recordings or JSON into clean, ready-to-run Playwright tests in minutes.
+- **Enterprise-grade POM**: Generates Page Object Model classes with modern selectors and `test.step(...)` for readable reports.
+- **Learn by example**: See best-practice Playwright structure (projects, config, POM, assertions) and evolve your own framework.
+- **Mini framework per run**: Every generation creates a self-contained, runnable Playwright project you can drop into your repo.
+- **Multi-LLM choice**: Use Perplexity, Claude, OpenAI, Gemini, Grok, or DeepSeek—switch with a single flag.
+- **CI-friendly output**: Deterministic files, HTML reports, and sensible timeouts reduce flake and review time.
+- **Scales teams**: After adopting this, Playwright stops being a burden—teams ship tests faster with higher quality.
+
+---
+
+## 📋 Configure repo
 
 ```bash
-# import repo
-git clone https://<gitUserName>@github.com/<repoName>.git
-
 # Install dependencies
-pnpm install
-
-# Start server
-pnpm start
-```
-
 ## 🚀 Quick Start
 
 Use directly with npx (no installation required):
@@ -23,15 +35,12 @@ Use directly with npx (no installation required):
 
 ```bash
 # Using command line API key
-npx mcp-playwright-generator@latest --json ./your-test.json --api-key "your-key"
+npx mcp-playwright-generator@latest --json ./your-test.json --api-key "your-key" --llm "llm-name" #claude, perplexity, gemini, deepseek, grok, openai 
 
 # Using environment variable
 export PERPLEXITY_API_KEY="your-key"   # or ANTHROPIC_API_KEY / OPENAI_API_KEY / GEMINI_API_KEY / GROK_API_KEY / DEEPSEEK_API_KEY
-npx mcp-playwright-generator@latest --json ./your-test.json --llm perplexity
+npx mcp-playwright-generator@latest --json ./your-test.json --api-key "your-key" --llm perplexity
 
-# Using .env file
-echo 'PERPLEXITY_API_KEY=your-key' > .env
-npx mcp-playwright-generator@latest --json ./your-test.json --llm perplexity
 ```
 
 ### 🎬 Recording Mode - Record browser interactions
@@ -39,11 +48,6 @@ npx mcp-playwright-generator@latest --json ./your-test.json --llm perplexity
 ```bash
 # Record interactions on a website
 npx mcp-playwright-generator@latest --record https://google.com --llm perplexity --api-key "$PERPLEXITY_API_KEY"
-
-# With environment variable
-export PERPLEXITY_API_KEY="your-key"
-npx mcp-playwright-generator@latest --record https://google.com --llm perplexity
-```
 
 ### 🚀 Generate and Run Tests Immediately (Visible Browser)
 
@@ -90,14 +94,6 @@ npx playwright test script/tests/ --project=chromium # Specific browser
 
 ### Option 1: Direct Usage (Recommended)
 No installation needed - use with npx directly.
-
-### Option 2: Local Development
-```bash
-git clone <repository>
-cd claude-mcp-server
-npm install
-npm run dev  # Start the MCP server
-```
 
 ## 🎬 Recording Mode Features
 - **Real Playwright Codegen Integration** - Uses actual `npx playwright codegen` for perfect selectors
@@ -148,6 +144,35 @@ Your JSON file should contain test specifications with **Playwright selectors**:
 - `pages/` - Page Object Model classes (.ts files)
 - `tests/` - Playwright test files (.spec.ts files)
 - `json/` - Recorded or source test specifications
+- `playwright.config.ts` - Preconfigured for reliability (expect/action/navigation timeouts, test timeout 120s, reporter)
+- `tsconfig.json` - Minimal TS config compatible with Playwright
+- `package.json` - Local scripts: test, test:headed, test:ui
+- `README.md` - Auto-generated usage guide for the specific script folder
+
+This output is a Playwright mini framework:
+- Clean Page Object Model classes generated from your flows
+- Tests organized with `test.step(...)` for readable reporting
+- Config tuned: 60s expect/action/navigation timeouts, 120s overall test timeout to prevent early aborts
+- Works standalone: `npm install && npx playwright install && npx playwright test`
+- Easy to move into your existing Playwright repo — just copy `pages/`, `tests/`, and optionally merge config
+
+Example layout (GeneratedScript-<date>>-<month>-<year>-<hours>-<minutes>): 
+```
+GeneratedScript-15-Aug-2025-00-42/
+  pages/
+    LoginPage.ts
+    SearchPage.ts
+    ...
+  tests/
+    recorded-test-<timestamp>.spec.ts
+    ...
+  json/
+    recorded-test-<timestamp>.json
+  playwright.config.ts
+  tsconfig.json
+  package.json
+  README.md
+```
 
 **Features:**
 - **Bulletproof Selectors** - Uses Playwright's codegen for guaranteed-unique selectors
@@ -155,24 +180,6 @@ Your JSON file should contain test specifications with **Playwright selectors**:
 - Proper TypeScript structure with Page Object Model pattern
 - Smart waits and error handling
 - Clean, maintainable test code
-
-## 🔧 Local Development
-
-```bash
-# Start the MCP server (Terminal 1)
-cd /path/to/claude-mcp-server
-npm run dev
-
-# Use the CLI (Terminal 2)
-npx mcp-playwright-generator --json ./test.json
-```
-
-## 📁 Examples
-
-Sample files included:
-- `test.json` - Basic login test
-- `sample-request.json` - Complex test scenarios  
-- `test3.json` - Multi-step workflows
 
 ## ⚙️ Configuration
 
@@ -200,7 +207,7 @@ Optional model envs:
 ```
 
 **Password prompt not showing**
-You likely already passed the password via `--password`, or have `MCP_PASSWORD' set. Unset them to force prompt.
+You likely already passed the password via `--password`, or have `MCP_PASSWORD' set in .env file. Unset them to force prompt.
 
 **Cannot connect to MCP server**
 ```bash
