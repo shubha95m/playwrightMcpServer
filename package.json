@@ -20,7 +20,7 @@
     "lint:check": "node -c server.js",
     "validate": "npm run lint:check && npm run test",
     "prepublishOnly": "npm run validate && npm run build",
-    "postinstall": "playwright install",
+    "postinstall": "npx playwright install",
     "playwright:install": "playwright install",
     "playwright:test": "playwright test"
   },
@@ -33,7 +33,7 @@
   "files": [
     "cli/index.js",
     "server.js",
-    "claude-api-wrapper.js",
+    "wrappers/",
     "src/"
   ],
   "keywords": [

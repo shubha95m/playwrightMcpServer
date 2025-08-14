@@ -4,6 +4,7 @@ import path from 'path';
 import dotenv from 'dotenv';
 import { BrowserRecorderService } from '../src/services/browser-recorder.js';
 import { POMGeneratorService } from '../src/services/pom-generator.js';
+import { providerEnvHint } from '../src/services/llm-selector.js';
 import { FileGenerator } from '../src/utils/file-generator.js';
 import { CommandRunner } from '../src/utils/command-runner.js';
 
@@ -12,25 +13,27 @@ dotenv.config();
 const args = process.argv.slice(2);
 
 if (args.length === 0) {
-  console.log('Usage: mcp-playwright-generator --json <file> --api-key <key> [--run]');
-  console.log('   or: mcp-playwright-generator --record <url> --api-key <key> [--run]');
-  console.log('   or: mcp-playwright-generator --json <file> [--run] (uses ANTHROPIC_API_KEY env var)');
+  console.log('Usage: mcp-playwright-generator --json <file> --api-key <key> [--llm <claude|perplexity>] [--run]');
+  console.log('   or: mcp-playwright-generator --record <url> --api-key <key> [--llm <claude|perplexity>] [--run]');
+  console.log('   or: mcp-playwright-generator --json <file> [--llm <claude|perplexity>] [--run] (uses ANTHROPIC_API_KEY or PERPLEXITY_API_KEY env var)');
   console.log('');
   console.log('Options:');
   console.log('  --json <file>     Path to JSON test specification');
   console.log('  --record <url>    Launch browser and record interactions to generate test');
-  console.log('  --api-key <key>   Anthropic API key (optional if using env var)');
+  console.log('  --api-key <key>   API key for the chosen LLM (Anthropic or Perplexity)');
+  console.log('  --llm <name>      LLM provider: claude | perplexity (default: perplexity)');
   console.log('  --run             Automatically run the generated test with Playwright');
   console.log('  --headless        Run Playwright in headless mode (default: headed/visible)');
   process.exit(1);
 }
 
-let jsonPath, recordUrl, apiKey, runTests = false, headless = false;
+let jsonPath, recordUrl, apiKey, runTests = false, headless = false, llmName;
 const jsonIndex = args.indexOf('--json');
 const recordIndex = args.indexOf('--record');
 const apiKeyIndex = args.indexOf('--api-key');
 const runIndex = args.indexOf('--run');
 const headlessIndex = args.indexOf('--headless');
+const llmIndex = args.indexOf('--llm');
 
 if (jsonIndex !== -1) {
   jsonPath = args[jsonIndex + 1];
@@ -46,7 +49,7 @@ if (jsonIndex !== -1) {
 if (apiKeyIndex !== -1) {
   apiKey = args[apiKeyIndex + 1];
 } else {
-  apiKey = process.env.ANTHROPIC_API_KEY;
+  apiKey = process.env.ANTHROPIC_API_KEY || process.env.PERPLEXITY_API_KEY;
 }
 
 if (runIndex !== -1) {
@@ -57,16 +60,18 @@ if (headlessIndex !== -1) {
   headless = true;
 }
 
+if (llmIndex !== -1) {
+  llmName = args[llmIndex + 1];
+}
+
 if (!jsonPath && !recordUrl) {
   console.error('❌ Please provide either a JSON file path or recording URL');
   process.exit(1);
 }
 
 if (!apiKey) {
-  console.error('❌ API key is required. Please provide ANTHROPIC_API_KEY via:');
-  console.error('   1. Command line: --api-key <your-key>');
-  console.error('   2. Environment variable: export ANTHROPIC_API_KEY="your-key"');
-  console.error('   3. .env file: ANTHROPIC_API_KEY=your-key');
+  const envHint = providerEnvHint(llmName || process.env.LLM || 'perplexity');
+  console.error(`❌ API key is required. Provide via --api-key or set ${envHint} in your environment/.env`);
   process.exit(1);
 }
 
@@ -105,7 +110,7 @@ if (recordUrl) {
 
 async function main() {
   try {
-    const pomGenerator = new POMGeneratorService(apiKey);
+    const pomGenerator = new POMGeneratorService(apiKey, llmName);
     const pomResponse = await pomGenerator.generatePOMFiles(testName, steps.steps || steps);
     const pomFiles = pomResponse.result;
     const usage = pomResponse.usage;
@@ -158,12 +163,6 @@ async function main() {
     }
     
     if (runTests) {
-      console.log('\n🚀 Running generated test...');
-      console.log('💡 First installing Playwright dependencies...');
-      
-      await CommandRunner.runCommand('npm', ['install'], scriptDir);
-      await CommandRunner.runCommand('npx', ['playwright', 'install'], scriptDir);
-      
       await CommandRunner.runPlaywrightTest(scriptDir, headless);
     }
     

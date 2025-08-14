@@ -23,7 +23,7 @@ app.use(bodyParser.json());
 
 app.post('/generate-test', async (req, res) => {
   try {
-    const { testName, steps, apiKey, userCwd } = req.body;
+    const { testName, steps, apiKey, userCwd, llm } = req.body;
     
     // Validation
     if (!testName || !Array.isArray(steps)) {
@@ -39,7 +39,7 @@ app.post('/generate-test', async (req, res) => {
     }
 
     // Generate test using service
-    const testGenerator = new TestGeneratorService(apiKey);
+    const testGenerator = new TestGeneratorService(apiKey, llm);
     const { files: generatedFiles, usage } = await testGenerator.generateTest(testName, steps);
     
     // Create files using FileGenerator

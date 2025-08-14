@@ -2,6 +2,8 @@ export const PLAYWRIGHT_CONFIG_TEMPLATE = (headless = false) => `import { define
 
 export default defineConfig({
   testDir: './tests',
+  // Increase overall test timeout so waits up to 60s aren't cut short by the test-level 30s default
+  timeout: 120000,
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,

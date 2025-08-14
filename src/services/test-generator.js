@@ -1,8 +1,10 @@
-import { ClaudeAPI } from '../../claude-api-wrapper.js';
+import { createLlmClient } from './llm-selector.js';
 
 export class TestGeneratorService {
-  constructor(apiKey) {
-    this.claude = new ClaudeAPI(apiKey);
+  constructor(apiKey, llmName) {
+    const { client, provider } = createLlmClient({ apiKey, llmName });
+    this.client = client;
+    this.llmName = provider;
   }
 
   generatePrompt(steps) {
@@ -94,7 +96,8 @@ ${JSON.stringify(steps, null, 2)}
     console.log(`🎯 Generating "${testName}" with ${steps.length} steps`);
     
     const prompt = this.generatePrompt(steps);
-    const response = await this.claude.sendPrompt(prompt);
+    //const response = await this.claude.sendPrompt(prompt);
+    const response = await this.client.sendPrompt(prompt);
 
     let generatedFiles;
     try {

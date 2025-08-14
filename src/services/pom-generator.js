@@ -1,8 +1,10 @@
-import { ClaudeAPI } from '../../claude-api-wrapper.js';
+import { createLlmClient } from './llm-selector.js';
 
 export class POMGeneratorService {
-  constructor(apiKey) {
-    this.claude = new ClaudeAPI(apiKey);
+  constructor(apiKey, llmName) {
+    const { client, provider } = createLlmClient({ apiKey, llmName });
+    this.client = client;
+    this.llmName = provider;
   }
 
   generatePrompt(testName, steps) {
@@ -89,12 +91,12 @@ IMPORTANT:
 
   async generatePOMFiles(testName, steps) {
     console.log(`🚀 Generating test case: "${testName}"`);
-    console.log(`🤖 Using Claude API to generate Page Object Model files...`);
+    console.log(`🤖 Using ${this.llmName === 'claude' ? 'Claude' : 'Perplexity'} API to generate Page Object Model files...`);
     
     const prompt = this.generatePrompt(testName, steps);
 
     try {
-      const response = await this.claude.sendPrompt(prompt);
+      const response = await this.client.sendPrompt(prompt);
       let content = response.content;
       
       // Strip markdown code blocks if present
@@ -111,9 +113,9 @@ IMPORTANT:
         usage: response.usage
       };
     } catch (error) {
-      console.error('❌ Claude API Error:', error.message);
+      console.error(`❌ ${this.llmName === 'claude' ? 'Claude' : 'Perplexity'} API Error:`, error.message);
       console.error('💡 This might be due to response length or JSON formatting issues');
-      throw new Error(`Claude API error: ${error.message}`);
+      throw new Error(`${this.llmName === 'claude' ? 'Claude' : 'Perplexity'} API error: ${error.message}`);
     }
   }
 }
