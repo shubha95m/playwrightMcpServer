@@ -13,7 +13,7 @@ Generate Playwright tests from JSON specs or real browser recordings, powered by
 ---
 
 ## 🚀 Why you'll love this package
-- **Save 70–90% effort**: Turn recordings or JSON into clean, ready-to-run Playwright tests in minutes.
+- **Save 75–99% effort**: Turn recordings or JSON into clean, ready-to-run Playwright tests in minutes.
 - **Enterprise-grade POM**: Generates Page Object Model classes with modern selectors and `test.step(...)` for readable reports.
 - **Learn by example**: See best-practice Playwright structure (projects, config, POM, assertions) and evolve your own framework.
 - **Mini framework per run**: Every generation creates a self-contained, runnable Playwright project you can drop into your repo.
