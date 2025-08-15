@@ -89,6 +89,8 @@ npx playwright test script/tests/ --project=chromium # Specific browser
 - Node.js >= 18.0.0
 - LLM API key (Perplexity/Claude/OpenAI/Gemini/Grok/DeepSeek)
 - Running MCP server (for local development)
+- An API key for your chosen LLM (see "LLM API keys" section for options).
+- The access password for this package. Contact the owner, Shubham (shubham.sharma75319@gmail.com, +91 701-474-0879), to obtain it.
 
 ## 🛠️ Installation & Setup
 

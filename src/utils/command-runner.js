@@ -28,8 +28,24 @@ export class CommandRunner {
   }
 
   static async runPlaywrightTest(scriptDir, headless = false) {
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
       const npx = process.platform === 'win32' ? 'npx.cmd' : 'npx';
+      const npm = process.platform === 'win32' ? 'npm.cmd' : 'npm';
+
+      console.log(`
+        ✅ Installing dependencies in ${scriptDir}...`);
+              try {
+                await CommandRunner.runCommand(npm, ['install'], scriptDir);
+                await CommandRunner.runCommand(npx, ['playwright', 'install'], scriptDir);
+              } catch (error) {
+                console.error(`
+        ❌ Failed to install dependencies in ${scriptDir}:`, error.message);
+                return resolve();
+              }
+              console.log('✅ Dependencies installed.');
+        
+              console.log('🚀 Running Playwright tests...');
+              
       const args = ['playwright', 'test'];
       
       if (headless) {
