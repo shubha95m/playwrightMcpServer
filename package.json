@@ -29,7 +29,7 @@
   ],
   "funding": {
     "type": "individual",
-    "url": "https://github.com/shubha95m/playwrightMcpServer/blob/main/README.md"
+    "url": "https://github.com/shubha95m/playwrightMcpServer/blob/main/src/funding/QR_CODE.png"
   },
   "type": "module",
   "main": "server.js",
