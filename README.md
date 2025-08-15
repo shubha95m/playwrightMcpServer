@@ -220,3 +220,8 @@ You likely already passed the password via `--password`, or have `MCP_PASSWORD' 
 ## 📄 License
 
 MIT
+
+## Support My Work ❤️
+Scan the QR code to pay:
+
+![Buy Me a Coffee..!!!](./src/funding/QR_CODE.png)

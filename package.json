@@ -1,6 +1,6 @@
 {
   "name": "mcp-playwright-generator",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "MCP Playwright Test Generator - Generate Playwright tests from JSON specifications",
   "keywords": [
     "mcp",
@@ -29,7 +29,7 @@
   ],
   "funding": {
     "type": "individual",
-    "url": "https://www.example.com/contact"
+    "url": "https://github.com/shubha95m/playwrightMcpServer/blob/main/README.md"
   },
   "type": "module",
   "main": "server.js",
