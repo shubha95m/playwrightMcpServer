@@ -224,4 +224,4 @@ MIT
 ## Support My Work ❤️
 Scan the QR code to pay:
 
-[Buy Me a Coffee!](./src/funding/QR_CODE.png)
+[Buy Me a Coffee!](./src/funding/coffee.md)
