@@ -1,3 +1,6 @@
+# Business Logic is in separate private repository
+# Backend service: ../mcp-playwright-backend
+
 node_modules/
 .env
 .DS_Store

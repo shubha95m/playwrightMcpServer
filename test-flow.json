@@ -1,0 +1,27 @@
+{
+  "testName": "Login Test Flow",
+  "steps": [
+    {
+      "action": "navigate",
+      "url": "https://example.com/login"
+    },
+    {
+      "action": "fill",
+      "selector": "#username",
+      "value": "testuser@example.com"
+    },
+    {
+      "action": "fill",
+      "selector": "#password",
+      "value": "password123"
+    },
+    {
+      "action": "click",
+      "selector": "button[type='submit']"
+    },
+    {
+      "action": "waitForSelector",
+      "selector": ".dashboard"
+    }
+  ]
+}
